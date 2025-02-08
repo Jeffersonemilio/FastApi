@@ -6,11 +6,12 @@ from dotenv import load_dotenv
 # Carregar variáveis de ambiente
 load_dotenv()
 
-# Modificar a URL para usar asyncpg corretamente
+# Ler a URL do banco do arquivo .env
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL.startswith("postgres://"):  # Railway pode fornecer com "postgres://"
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://")
+# 🚨 Garantir que estamos usando 'asyncpg'
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
 
 # Criar engine assíncrona
 engine = create_async_engine(DATABASE_URL, echo=True)
