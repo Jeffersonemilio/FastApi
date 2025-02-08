@@ -3,13 +3,16 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 
-# Carregar variáveis do .env
+# Carregar variáveis de ambiente
 load_dotenv()
 
-# Ler a URL do banco do arquivo .env
+# Modificar a URL para usar asyncpg corretamente
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Criar engine assíncrona para PostgreSQL
+if DATABASE_URL.startswith("postgres://"):  # Railway pode fornecer com "postgres://"
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://")
+
+# Criar engine assíncrona
 engine = create_async_engine(DATABASE_URL, echo=True)
 
 # Criar sessão de banco de dados
@@ -19,8 +22,3 @@ SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=F
 async def get_db():
     async with SessionLocal() as session:
         yield session
-
-
-async def init_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
