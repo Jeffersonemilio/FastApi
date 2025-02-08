@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends
-from database import init_db
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from models import User
 from database import get_db
+
 from passlib.context import CryptContext
 
 app = FastAPI()
