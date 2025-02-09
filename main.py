@@ -33,6 +33,32 @@ def divide(a: float, b: float):
         raise HTTPException(status_code=400, detail="Divisão por zero não é permitida")
     return {"operation": "division", "a": a, "b": b, "result": a / b}
 
+@app.get("/imc")
+def calculate_imc(peso: float, altura: float):
+    if peso <= 0:
+        raise HTTPException(status_code=400, detail="O peso deve ser maior que zero")
+    if altura <= 0:
+        raise HTTPException(status_code=400, detail="A altura deve ser maior que zero")
+    
+    imc = peso / (altura * altura)
+    
+    classificacao = ""
+    if imc < 18.5:
+        classificacao = "Abaixo do peso"
+    elif imc < 25:
+        classificacao = "Peso normal"
+    elif imc < 30:
+        classificacao = "Sobrepeso"
+    else:
+        classificacao = "Obesidade"
+    
+    return {
+        "peso": peso,
+        "altura": altura,
+        "imc": round(imc, 2),
+        "classificacao": classificacao
+    }
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
