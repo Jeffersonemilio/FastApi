@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 app = FastAPI()
 
 async def startup():
-    await init_db()
+    await get_db()
 
 @app.get("/")
 async def root():
